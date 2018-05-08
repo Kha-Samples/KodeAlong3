@@ -1,7 +1,12 @@
 #version 450
 
+in vec3 norm;
+in vec2 tex;
+
+uniform sampler2D image;
+
 out vec4 frag;
 
 void main() {
-	frag = vec4(1.0, 0.0, 0.0, 1.0);
+	frag = texture(image, vec2(tex.x, 1 - tex.y));
 }

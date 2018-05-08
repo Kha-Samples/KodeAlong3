@@ -22,6 +22,8 @@ class Main {
 	static var pipeline: PipelineState;
 	static var vertexBuffer: VertexBuffer;
 	static var indexBuffer: IndexBuffer;
+	static var timeLocation: ConstantLocation;
+	static var texUnit: TextureUnit;
 	
 	public static function main() {
 		System.init({title: "MeshLoader", width: 800, height: 600}, function () {
@@ -63,7 +65,12 @@ class Main {
 		pipeline.inputLayout = [structure];
 		pipeline.vertexShader = Shaders.mesh_vert;
 		pipeline.fragmentShader = Shaders.mesh_frag;
+		pipeline.depthWrite = true;
+		pipeline.depthMode = CompareMode.Less;
 		pipeline.compile();
+		
+		timeLocation = pipeline.getConstantLocation("time");
+		texUnit = pipeline.getTextureUnit("image");
 	}
 	
 	static function render(frame: Framebuffer): Void {
@@ -72,6 +79,8 @@ class Main {
 		g.clear(Color.Black, Math.POSITIVE_INFINITY);
 
 		g.setPipeline(pipeline);
+		g.setFloat(timeLocation, System.time);
+		g.setTexture(texUnit, Assets.images.tiger_atlas);
 		
 		g.setIndexBuffer(indexBuffer);
 		g.setVertexBuffer(vertexBuffer);
